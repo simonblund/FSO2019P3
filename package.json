@@ -1,0 +1,26 @@
+{
+  "name": "fso2019p3",
+  "version": "1.0.0",
+  "description": "Phonebook backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simonblund/FSO2019P3.git"
+  },
+  "keywords": [
+    "coursework"
+  ],
+  "author": "Simon Blomsterlund",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/simonblund/FSO2019P3/issues"
+  },
+  "homepage": "https://github.com/simonblund/FSO2019P3#readme",
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
