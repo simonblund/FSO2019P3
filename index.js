@@ -1,8 +1,10 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 
+app.use(cors())
 app.use(bodyParser.json())
 app.use(morgan('tiny'))
 
@@ -87,7 +89,7 @@ app.delete('/api/persons/:id', (request,response) => {
 })
 
 // Port to serve application on
-const PORT =3001
+const PORT = process.env.PORT || 3001
 
 app.listen(PORT, () =>{
   console.log('Server running on '+PORT)
