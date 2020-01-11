@@ -4,6 +4,7 @@
   "description": "Phonebook backend",
   "main": "index.js",
   "scripts": {
+    "build:ui": "rm -rf build && cd /home/simon/Desktop/HELSINKICS/FSO2019/part2/phonebook/ && npm run build --prod && cp -r build /home/simon/Desktop/HELSINKICS/FSO2019P3/",
     "start": "node index.js",
     "watch": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
