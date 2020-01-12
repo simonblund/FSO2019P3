@@ -34,15 +34,13 @@ app.get('/api/persons', (request,response) => {
   .then(persons=>{
     response.json(persons.map(note =>note.toJSON()))
   })
-  .catch(error=>{
-    console.log(error)
-  })
+  .catch(error=>next(error))
   
 })
 
 app.post('/api/persons', (request,response) => {
   const body = request.body
-  console.log(Person.find({name: body.name}))
+
   if(!body.name || !body.number){
     return response.status(400).json({error:'content missing'})
   }
@@ -52,9 +50,13 @@ app.post('/api/persons', (request,response) => {
     number: body.number,
     id: generateId()
   })
-  person.save().then(savedPerson => {
+
+  person.save()
+  .then(savedPerson => {
     response.json(savedPerson.toJSON())
   })
+  .catch(error=>next(error))
+  
   
 })
 
@@ -64,11 +66,7 @@ app.get('/api/persons/:id', (request,response)=>{
   Person.findById(id).then(person =>{
     response.json(person.toJSON())
   })
-  .catch((error)=>{
-    response.status(404).end() 
-  }
-    
-  )
+  .catch(error=>next(error))
 })
 
 // Returns application info
@@ -85,8 +83,32 @@ app.delete('/api/persons/:id', (request,response) => {
   .then(result=>{
     response.status(204).end()
   })
+  .catch(error=>next(error))
   
 })
+
+
+/*
+ERROR HANDLERS
+*/
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError' && error.kind == 'ObjectId') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
 
 // Port to serve application on
 const PORT = process.env.PORT || 3001
