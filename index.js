@@ -30,8 +30,12 @@ const generateId = () => {
  * GET api/persons/[id] - get one person
  */
 app.get('/api/persons', (request,response) => {
-  Person.find({}).then(persons=>{
+  Person.find({})
+  .then(persons=>{
     response.json(persons.map(note =>note.toJSON()))
+  })
+  .catch(error=>{
+    console.log(error)
   })
   
 })
@@ -76,9 +80,12 @@ app.get('/info', (req,res) => {
 
 // Deletes person from persons list
 app.delete('/api/persons/:id', (request,response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
-  response.status(204).end()
+  const id = request.params.id
+  Person.findByIdAndDelete(id)
+  .then(result=>{
+    response.status(204).end()
+  })
+  
 })
 
 // Port to serve application on
