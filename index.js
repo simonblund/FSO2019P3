@@ -1,78 +1,70 @@
+/**
+ * Imports
+ */
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
+
 const app = express()
 
+/**
+ * Middleware
+ */
 app.use(cors())
 app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(morgan('tiny'))
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123123123",
-    id: 1
-  },
-  {
-    name: "Maaret Hellas",
-    number: "040-121212",
-    id: 2
-  },
-  {
-    name: "Saaret Lellas",
-    number: "040-453451212",
-    id: 3
-  },
-  {
-    name: "Laaret HKellas",
-    number: "040-42345234523",
-    id: 4
-  },
-  {
-    name: "Flaaret Mjellas",
-    number: "040-13422",
-    id: 5
-  },
-
-]
-
-
 const generateId = () => {
   return Math.floor(Math.random()*Math.floor(10000))
 }
 
-// Returns list of persons
+
+/**
+ * Persons API
+ * GET api/persons - list of persons
+ * POST api/persons - create person
+ * GET api/persons/[id] - get one person
+ */
 app.get('/api/persons', (request,response) => {
-  response.json(persons)
+  Person.find({}).then(persons=>{
+    response.json(persons.map(note =>note.toJSON()))
+  })
   
 })
 
-// Returns list of persons
 app.post('/api/persons', (request,response) => {
   const body = request.body
+  console.log(Person.find({name: body.name}))
   if(!body.name || !body.number){
     return response.status(400).json({error:'content missing'})
   }
-  if(persons.find(person => person.name == body.name)){
-    return response.status(406).json({error:'Name must be unique'})
-  }
 
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
     id: generateId()
-  }
-  persons = persons.concat(person)
-  response.json(person)
+  })
+  person.save().then(savedPerson => {
+    response.json(savedPerson.toJSON())
+  })
+  
 })
 
 // Returns person from id
 app.get('/api/persons/:id', (request,response)=>{
-  const id = Number(request.params.id)
-  const person = persons.find(person => person.id == id)
-  person ? response.json(person) : response.status(404).end() 
+  const id = request.params.id
+  Person.findById(id).then(person =>{
+    response.json(person.toJSON())
+  })
+  .catch((error)=>{
+    response.status(404).end() 
+  }
+    
+  )
 })
 
 // Returns application info
