@@ -7,6 +7,7 @@
     "build:ui": "rm -rf build && cd /home/simon/Desktop/HELSINKICS/FSO2019/part2/phonebook/ && npm run build --prod && cp -r build /home/simon/Desktop/HELSINKICS/FSO2019P3/",
     "start": "node index.js",
     "watch": "nodemon index.js",
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +24,7 @@
   },
   "homepage": "https://github.com/simonblund/FSO2019P3#readme",
   "devDependencies": {
+    "eslint": "^6.8.0",
     "nodemon": "^1.19.1"
   },
   "dependencies": {
