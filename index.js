@@ -23,12 +23,23 @@ const generateId = () => {
 }
 
 
+// Returns application info
+app.get('/info', (req,res) => {
+  date = new Date()
+  
+  Person.find({})
+  .then(persons=>{
+    res.send('<p>Phonebook contains the info of '+persons.length+' persons</p><br><p>'+date.toString()+'</p>')
+  })
+  .catch(error=>next(error))
+})
 /**
  * Persons API
  * GET api/persons - list of persons
  * POST api/persons - create person
  * GET api/persons/[id] - get one person
  */
+
 app.get('/api/persons', (request,response,next) => {
   Person.find({})
   .then(persons=>{
@@ -48,8 +59,9 @@ app.post('/api/persons', (request,response,next) => {
   })
 
   person.save()
-  .then(savedPerson => {
-    response.json(savedPerson.toJSON())
+  .then(savedPerson => savedPerson.toJSON())
+  .then(savedAndJsonPerson=>{
+    response.json(savedAndJsonPerson)
   })
   .catch(error=>next(error))
 })
@@ -76,18 +88,6 @@ app.put('/api/persons/:id', (request,response,next)=>{
   .catch(error =>next(error))
 })
 
-// Returns application info
-app.get('/info', (req,res) => {
-  date = new Date()
-  
-  Person.find({})
-  .then(persons=>{
-    res.send('<p>Phonebook contains the info of '+persons.length+' persons</p><br><p>'+date.toString()+'</p>')
-  })
-  .catch(error=>next(error))
-  
-  
-})
 
 // Deletes person from persons list
 app.delete('/api/persons/:id', (request,response,next) => {
@@ -101,7 +101,7 @@ app.delete('/api/persons/:id', (request,response,next) => {
 
 
 /*
-ERROR HANDLERS
+ERROR HANDLER
 */
 
 const unknownEndpoint = (request, response) => {
