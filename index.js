@@ -83,7 +83,13 @@ app.put('/api/persons/:id', (request,response,next)=>{
 // Returns application info
 app.get('/info', (req,res) => {
   date = new Date()
-  res.send('<p>Phonebook contains the info of '+persons.length+' persons</p><br><p>'+date.toString()+'</p>')
+  
+  Person.find({})
+  .then(persons=>{
+    res.send('<p>Phonebook contains the info of '+persons.length+' persons</p><br><p>'+date.toString()+'</p>')
+  })
+  .catch(error=>next(error))
+  
   
 })
 
